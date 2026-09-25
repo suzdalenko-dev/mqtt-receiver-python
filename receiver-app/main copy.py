@@ -4,11 +4,11 @@ import paho.mqtt.client as mqtt
 BROKER = "192.168.14.11"
 PORT   = 1884
 
-# USUARIO = "test"
-# CONTRASENA = "pw"
+# USUARIO = ""
+# CONTRASENA = ""
 
-USUARIO        = "froxa"
-CONTRASENA     = "O8wTi8GcsZ]R8-"
+USUARIO        = ""
+CONTRASENA     = ""
 
 TOPIC = "Froxa/#"
 
