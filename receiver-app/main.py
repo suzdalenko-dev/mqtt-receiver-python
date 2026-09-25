@@ -9,6 +9,7 @@ print(mqtt_env("POSTGRES_PORT"))
 print(mqtt_env("POSTGRES_DB"))
 print(mqtt_env("POSTGRES_USER"))
 print(mqtt_env("POSTGRES_PASSWORD"))
+print(mqtt_env("POSTGRES_TABLE"))
 
 
 print(mqtt_env("MQTT_HOST"))
