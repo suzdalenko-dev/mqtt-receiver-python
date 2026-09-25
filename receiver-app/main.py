@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 from sfunctions.func import mqtt_env
 
-
+"""
 print(mqtt_env("MQTT_HOST"))
 print(mqtt_env("MQTT_PORT"))
 print(mqtt_env("MQTT_USER"))
@@ -12,8 +12,6 @@ print(mqtt_env('MQTT_KEEPALIVE'))
 print(mqtt_env('MQTT_QOS'))
 
 
-
-"""
 Trabajo a implementar:
     1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
     2. Escritura en de log datos recibidos "data/YEAR/MONTH.log"        (valorar asyncio, thread)
@@ -29,6 +27,7 @@ def on_message(client, userdata, message):
 def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code != 0:
         print(f"Conexion rechazada {reason_code}")
+        return
 
     result, mId = client.subscribe(mqtt_env('MQTT_TOPIC'), qos=int(mqtt_env('MQTT_QOS')))
 
@@ -40,9 +39,8 @@ cliente = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, cli
 cliente.username_pw_set(username=mqtt_env("MQTT_USER"), password=mqtt_env("MQTT_PASSWORD"))
 cliente.reconnect_delay_set(min_delay=1, max_delay=60)
 cliente.connect_async(host=mqtt_env("MQTT_HOST"), port=int(mqtt_env('MQTT_PORT')), keepalive=30,)
-cliente.loop_forever(retry_first_connection=True)
 cliente.on_connect = on_connect
 cliente.on_message = on_message
-
+cliente.loop_forever(retry_first_connection=True)
 
 cliente.loop_forever()
