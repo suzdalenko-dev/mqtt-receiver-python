@@ -21,26 +21,28 @@ Trabajo a implementar:
     4. Guardar datos en POSTGRESQL                                      (valorar asyncio, thread)
 """
 
+# 1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
 def on_message(client, userdata, message):
     content = message.payload.decode("utf-8", errors="replace",)
     print(f"[{message.topic}] retain={message.retain}  {content}")
 
 def on_connect(client, userdata, flags, reason_code, properties):
-    if reason_code == 0:
-        print("Conexión MQTT correcta sin TLS")
+    if reason_code != 0:
+        print(f"Conexion rechazada {reason_code}")
 
-        client.subscribe(mqtt_env('MQTT_TOPIC'), qos=0)
-        print(f"Suscrito a: {mqtt_env('MQTT_TOPIC')}")
+    result, mId = client.subscribe(mqtt_env('MQTT_TOPIC'), qos=int(mqtt_env('MQTT_QOS')))
 
-    else:
-        print(f"Conexión MQTT rechazada: {reason_code}")
-        client.disconnect()
+    if result != mqtt.MQTT_ERR_SUCCESS:
+        print(f"Error al suscribirse {result}")
 
 
-cliente = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, client_id=mqtt_env('MQTT_CLIENT_ID'), protocol=mqtt.MQTTv311,)
-cliente.username_pw_set(username=mqtt_env("MQTT_USER"), password=mqtt_env("MQTT_PASSWORD"),)
+cliente = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, client_id=mqtt_env('MQTT_CLIENT_ID'), clean_session=False, protocol=mqtt.MQTTv311,)
+cliente.username_pw_set(username=mqtt_env("MQTT_USER"), password=mqtt_env("MQTT_PASSWORD"))
+cliente.reconnect_delay_set(min_delay=1, max_delay=60)
+cliente.connect_async(host=mqtt_env("MQTT_HOST"), port=int(mqtt_env('MQTT_PORT')), keepalive=30,)
+cliente.loop_forever(retry_first_connection=True)
 cliente.on_connect = on_connect
 cliente.on_message = on_message
-cliente.connect(host=mqtt_env("MQTT_HOST"), port=1884, keepalive=30,)
+
 
 cliente.loop_forever()
