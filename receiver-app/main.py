@@ -62,7 +62,7 @@ def main():
     cliente.connect_async(host=mqtt_env("MQTT_HOST"), port=int(mqtt_env('MQTT_PORT')), keepalive=30,)
     cliente.on_connect = on_connect
     cliente.on_message = on_message
-    cliente.loop_forever(retry_first_connection=True)
+    
 
 
     # --------------------------------------------------------
@@ -143,7 +143,7 @@ def main():
 
 
 
-
+    cliente.loop_forever(retry_first_connection=True)
 
 
 if __name__ == '__main__':
