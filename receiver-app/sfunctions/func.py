@@ -1,14 +1,13 @@
 from pathlib import Path
 from dotenv import dotenv_values
 
+base_dir    = Path(__file__).resolve().parent.parent.parent
+config_file = base_dir / ".env"
+config_app  = dotenv_values(config_file)
 
-def get_env():
-    base_dir    = Path(__file__).resolve().parent.parent
-    config_file = base_dir / ".env"
-    config_app  = dotenv_values(config_file)
-
-    MQTT_HOST   = config_app.get('MQTT_HOST')
-    return 'MQTT_HOST'
+def mqtt_env(tag):
+    value   = config_app.get(tag)
+    return value
 
 
 

@@ -1,32 +1,19 @@
-from pathlib import Path
-from dotenv import dotenv_values
 import paho.mqtt.client as mqtt
-
-base_dir    = Path(__file__).resolve().parent.parent
-config_file = base_dir / ".env"
-config_app  = dotenv_values(config_file)
-
-MQTT_HOST   = config_app.get('MQTT_HOST')
+from sfunctions.func import mqtt_env
 
 
-print(base_dir )
-print(config_file)
-print(config_app)
-print(MQTT_HOST)
-print(get_env())
+print(mqtt_env("MQTT_HOST"))
+print(mqtt_env("MQTT_PORT"))
+print(mqtt_env("MQTT_USER"))
+print(mqtt_env("MQTT_PASSWORD"))
+print(mqtt_env('MQTT_TOPIC'))
+print(mqtt_env('MQTT_CLIENT_ID'))
+print(mqtt_env('MQTT_KEEPALIVE'))
+print(mqtt_env('MQTT_QOS'))
 
 
 """
-BROKER = "192.168.14.11"
-PORT   = 1884
 
-# USUARIO = "test"
-# CONTRASENA = "pw"
-
-USUARIO        = "xxx"
-CONTRASENA     = "xxx"
-
-TOPIC = "Froxa/#"
 
 
 def on_message(client, userdata, message):
