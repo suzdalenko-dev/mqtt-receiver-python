@@ -1,5 +1,5 @@
 from pathlib import Path
-import queue, threading, json
+import queue, threading, json, shutil
 
 DATA_DIRECTORY = Path(__file__).resolve().parent.parent.parent / "data"
 LOG_QUEUE      = queue.Queue(maxsize=11111)
@@ -25,10 +25,11 @@ def put_message_to_log(date_utc, date_local, topic, content):
     
     
 def write_message_to_log(message):
-    date_utc = message['date_utc']
-    year_dir = DATA_DIRECTORY / f"{date_utc.year:04d}"
+    date_utc    = message['date_utc']
+    year_minus1 = date_utc.year - 1
+    year_dir    = DATA_DIRECTORY / f"{date_utc.year:04d}"
     year_dir.mkdir(parents=True, exist_ok=True)
-    file_url = DATA_DIRECTORY / f"{date_utc.year:04d}" / f"{date_utc.month:02d}.log"
+    file_url    = DATA_DIRECTORY / f"{date_utc.year:04d}" / f"{date_utc.month:02d}.log"
     
 
     message['date_utc']   = str(message['date_utc'])[:23]
@@ -42,10 +43,13 @@ def write_message_to_log(message):
         file.flush()
         print(message)
 
-    year_minus1 = int(f"{date_utc.year:04d}") - 1
+
     year_dir = DATA_DIRECTORY / year_minus1
-    if year_dir.exist() and year_dir.is_dir():
-        # delete
+    try:
+        if year_dir.exists() and year_dir.is_dir():
+            shutil.rmtree(year_dir)
+    except Exception as e:
+        print(f"Error when intent delete old directory {e}")
 
 
 def log_writer():
