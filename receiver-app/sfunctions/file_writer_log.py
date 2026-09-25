@@ -21,8 +21,9 @@ def put_message_to_log(date_utc, date_local, topic, content):
     
     
 def write_message_to_log(message):
-    file_url = DATA_DIRECTORY / f"{date_utc.year:04d}" / f"{date_utc.month:02d}.log"
     date_utc = message['date_utc']
+    file_url = DATA_DIRECTORY / f"{date_utc.year:04d}" / f"{date_utc.month:02d}.log"
+    
 
     message['date_utc']   = str(message['date_utc'])[:23]
     message['date_local'] = str(message['date_local'])[:23]
