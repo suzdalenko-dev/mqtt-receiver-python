@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 from datetime import datetime, timezone
 from sfunctions.func import mqtt_env
 from sfunctions.file_writer_log import start_log_writer, put_message_to_log
+from sfunctions.postgre_conn import get_postgres_pool, postgres_connection, close_postgres_pool
+
 
 """
 print(mqtt_env("POSTGRES_HOST"))
@@ -61,6 +63,87 @@ def main():
     cliente.on_connect = on_connect
     cliente.on_message = on_message
     cliente.loop_forever(retry_first_connection=True)
+
+
+    # --------------------------------------------------------
+    # 1. Test singleton
+    # --------------------------------------------------------
+
+    pool_1 = get_postgres_pool()
+    pool_2 = get_postgres_pool()
+
+    print()
+    print("Singleton pool:", pool_1 is pool_2)
+
+    # --------------------------------------------------------
+    # 2. First PostgreSQL connection
+    # --------------------------------------------------------
+
+    with postgres_connection() as connection:
+
+        with connection.cursor() as cursor:
+
+            cursor.execute("""
+                SELECT
+                    current_database(),
+                    current_user,
+                    pg_backend_pid()
+            """)
+
+            database, user, backend_pid_1 = cursor.fetchone()
+
+            print()
+            print("PostgreSQL connection OK")
+            print("Database:", database)
+            print("User:", user)
+            print("Backend PID:", backend_pid_1)
+
+
+    # --------------------------------------------------------
+    # 3. Request connection again
+    # --------------------------------------------------------
+
+    with postgres_connection() as connection:
+
+        with connection.cursor() as cursor:
+
+            cursor.execute("""
+                SELECT
+                    pg_backend_pid(),
+                    current_setting('application_name')
+            """)
+
+            backend_pid_2, application_name = cursor.fetchone()
+
+            print()
+            print("Second connection request OK")
+            print("Backend PID:", backend_pid_2)
+            print("Application:", application_name)
+
+    # --------------------------------------------------------
+    # 4. Check whether physical connection was reused
+    # --------------------------------------------------------
+
+    print()
+    print(
+        "Physical connection reused:",
+        backend_pid_1 == backend_pid_2
+    )
+
+    # --------------------------------------------------------
+    # 5. Graceful shutdown
+    # --------------------------------------------------------
+
+    close_postgres_pool()
+
+    print()
+    print("PostgreSQL pool closed correctly")
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
