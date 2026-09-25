@@ -16,19 +16,22 @@ print(mqtt_env('MQTT_QOS'))
 Work to be implemented:
     1. Secure/stable/reconnections/industrial/simple connections for MQTT   (consider asyncio, thread)
     2. Write received data to the log file "data/YEAR/MONTH.log"            (consider asyncio, thread)
+        Create data base column ID, date_utc, date_local, topic, value
     3. Delete the log from the previos year "data/YEAR-1"                   (consider asyncio, thread)
     4. Save data to POSTGRESQL                                              (consider asyncio, thread)
 """
 
 # 1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
 def on_message(client, userdata, message):
-    date_utc = datetime.now(timezone.utc)
+    date_utc   = datetime.now(timezone.utc)
     date_local = date_utc.astimezone()
-    content = message.payload.decode("utf-8", errors="replace",)
+    topic      = message.topic
+    content    = message.payload.decode("utf-8", errors="replace",)
 
-    print(f"{ str(date_utc)[:23]}")
+    print(f"{str(date_utc)[:23]}")
     print(f"{str(date_local)[:23]}")
-    print(f"[{message.topic}]  {content}")
+    print(f"[{topic}]")
+    print(f"{content}")
     print("")
 
 def on_connect(client, userdata, flags, reason_code, properties):
