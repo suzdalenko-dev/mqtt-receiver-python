@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 from datetime import datetime, timezone
 from sfunctions.func import mqtt_env
-from sfunctions.file_writer_log import start_log_writer
+from sfunctions.file_writer_log import start_log_writer, put_message_to_log
 
 """
 print(mqtt_env("MQTT_HOST"))
@@ -28,6 +28,8 @@ def on_message(client, userdata, message):
     date_local = date_utc.astimezone()
     topic      = message.topic
     content    = message.payload.decode("utf-8", errors="replace",)
+    
+    put_message_to_log(date_utc, date_local, topic, content)
     '''
     print(f"{str(date_utc)[:23]}")
     print(f"{str(date_local)[:23]}")

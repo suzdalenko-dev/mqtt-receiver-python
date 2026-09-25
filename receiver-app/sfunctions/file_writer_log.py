@@ -11,6 +11,12 @@ def getMi():
    print(PROJECT_DIR)
    return PROJECT_DIR
 
+
+def put_message_to_log(date_utc, date_local, topic, content):
+    message = {'date_utc': date_utc, 'date_local': date_local, 'topic': topic, 'content': content}
+    LOG_QUEUE.put_nowait(message)
+
+
 def log_writer():
     while True:
         current_event = LOG_QUEUE.get()
