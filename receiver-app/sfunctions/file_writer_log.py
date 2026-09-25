@@ -5,12 +5,6 @@ DATA_DIRECTORY = Path(__file__).resolve().parent.parent.parent / "data"
 LOG_QUEUE      = queue.Queue(maxsize=11111)
 
 
-def getMi():
-   # /opt/mqtt-receiver-python/data
-   PROJECT_DIR = Path(__file__).resolve().parent.parent.parent / "data"
-   print(PROJECT_DIR)
-   return PROJECT_DIR
-
 
 def put_message_to_log(date_utc, date_local, topic, content):
     try:
@@ -31,20 +25,16 @@ def write_message_to_log(message):
     year_dir.mkdir(parents=True, exist_ok=True)
     file_url    = DATA_DIRECTORY / f"{date_utc.year:04d}" / f"{date_utc.month:02d}.log"
     
-
     message['date_utc']   = str(message['date_utc'])[:23]
     message['date_local'] = str(message['date_local'])[:23]
-
 
     json_line = json.dumps(message, ensure_ascii=False, separators=(',', ':'))
     with file_url.open(mode='a', encoding='utf-8',) as file:
         file.write(json_line)
         file.write('\n')
         file.flush()
-        print(message)
 
-
-    year_dir = DATA_DIRECTORY / year_minus1
+    year_dir = DATA_DIRECTORY / str(year_minus1)
     try:
         if year_dir.exists() and year_dir.is_dir():
             shutil.rmtree(year_dir)

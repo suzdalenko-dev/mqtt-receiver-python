@@ -4,6 +4,13 @@ from sfunctions.func import mqtt_env
 from sfunctions.file_writer_log import start_log_writer, put_message_to_log
 
 """
+print(mqtt_env("POSTGRES_HOST"))
+print(mqtt_env("POSTGRES_PORT"))
+print(mqtt_env("POSTGRES_DB"))
+print(mqtt_env("POSTGRES_USER"))
+print(mqtt_env("POSTGRES_PASSWORD"))
+
+
 print(mqtt_env("MQTT_HOST"))
 print(mqtt_env("MQTT_PORT"))
 print(mqtt_env("MQTT_USER"))
@@ -30,13 +37,7 @@ def on_message(client, userdata, message):
     content    = message.payload.decode("utf-8", errors="replace",)
 
     put_message_to_log(date_utc, date_local, topic, content)
-    '''
-    print(f"{str(date_utc)[:23]}")
-    print(f"{str(date_local)[:23]}")
-    print(f"[{topic}]")
-    print(f"{content}")
-    print("")
-    '''
+
    
     
 def on_connect(client, userdata, flags, reason_code, properties):
