@@ -1,14 +1,30 @@
+from pathlib import Path
+from dotenv import dotenv_values
 import paho.mqtt.client as mqtt
 
+base_dir    = Path(__file__).resolve().parent.parent
+config_file = base_dir / ".env"
+config_app  = dotenv_values(config_file)
 
+MQTT_HOST   = config_app.get('MQTT_HOST')
+
+
+print(base_dir )
+print(config_file)
+print(config_app)
+print(MQTT_HOST)
+print(get_env())
+
+
+"""
 BROKER = "192.168.14.11"
 PORT   = 1884
 
 # USUARIO = "test"
 # CONTRASENA = "pw"
 
-USUARIO        = "froxa"
-CONTRASENA     = "O8wTi8GcsZ]R8-"
+USUARIO        = "xxx"
+CONTRASENA     = "xxx"
 
 TOPIC = "Froxa/#"
 
@@ -53,3 +69,4 @@ cliente.connect(
 )
 
 cliente.loop_forever()
+"""

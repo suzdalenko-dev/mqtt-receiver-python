@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 
 
 BROKER = "192.168.14.11"
-PORT = 1884
+PORT   = 1884
 
 # USUARIO = "test"
 # CONTRASENA = "pw"
