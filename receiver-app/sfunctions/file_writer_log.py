@@ -13,6 +13,10 @@ def getMi():
 
 
 def put_message_to_log(date_utc, date_local, topic, content):
+    try:
+        content = json.loads(content)
+    except:
+        content = content
     message = {'date_utc': date_utc, 'date_local': date_local, 'topic': topic, 'content': content}
     try: 
         LOG_QUEUE.put_nowait(message)
@@ -29,6 +33,7 @@ def write_message_to_log(message):
 
     message['date_utc']   = str(message['date_utc'])[:23]
     message['date_local'] = str(message['date_local'])[:23]
+
 
     json_line = json.dumps(message, ensure_ascii=False, separators=(',', ':'))
     with file_url.open(mode='a', encoding='utf-8',) as file:
