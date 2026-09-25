@@ -1,7 +1,7 @@
 import threading
 from contextlib import contextmanager
 from psycopg_pool import ConnectionPool
-from sfunctions.func import mqtt_env, reconnect_failed
+from sfunctions.func import mqtt_env, reconnect_failed, connection_config
 
 # ============================================================
 # SINGLETON POSTGRESQL CONNECTION POOL
