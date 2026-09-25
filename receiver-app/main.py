@@ -28,7 +28,7 @@ def on_message(client, userdata, message):
     date_local = date_utc.astimezone()
     topic      = message.topic
     content    = message.payload.decode("utf-8", errors="replace",)
-    
+
     put_message_to_log(date_utc, date_local, topic, content)
     '''
     print(f"{str(date_utc)[:23]}")
@@ -59,7 +59,6 @@ def main():
     cliente.on_connect = on_connect
     cliente.on_message = on_message
     cliente.loop_forever(retry_first_connection=True)
-    cliente.loop_forever()
 
 
 if __name__ == '__main__':

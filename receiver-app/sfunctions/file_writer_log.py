@@ -14,7 +14,12 @@ def getMi():
 
 def put_message_to_log(date_utc, date_local, topic, content):
     message = {'date_utc': date_utc, 'date_local': date_local, 'topic': topic, 'content': content}
-    LOG_QUEUE.put_nowait(message)
+    try: 
+        LOG_QUEUE.put_nowait(message)
+    except:
+        print("Log queue full")
+    
+    
 
 
 def log_writer():
