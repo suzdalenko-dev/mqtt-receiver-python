@@ -42,6 +42,11 @@ def write_message_to_log(message):
         file.flush()
         print(message)
 
+    year_minus1 = int(f"{date_utc.year:04d}") - 1
+    year_dir = DATA_DIRECTORY / year_minus1
+    if year_dir.exist() and year_dir.is_dir():
+        # delete
+
 
 def log_writer():
     while True:
