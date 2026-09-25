@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+from datetime import datetime, timezone
 from sfunctions.func import mqtt_env
 
 """
@@ -21,8 +22,14 @@ Work to be implemented:
 
 # 1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
 def on_message(client, userdata, message):
+    date_utc = datetime.now(timezone.utc)
+    date_local = date_utc.astimezone()
     content = message.payload.decode("utf-8", errors="replace",)
-    print(f"[{message.topic}] retain={message.retain}  {content}")
+
+    print(f"{ str(date_utc)[:23]}")
+    print(f"{str(date_local)[:23]}")
+    print(f"[{message.topic}]  {content}")
+    print("")
 
 def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code != 0:
