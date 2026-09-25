@@ -13,7 +13,11 @@ print(mqtt_env('MQTT_QOS'))
 
 
 """
-
+Trabajo a implementar:
+    1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
+    2. Escritura en de log datos recibidos "data/YEAR/MONTH.log"        (valorar asyncio, thread)
+    3. Borrado de log del año anterior "data/YEAR-1"                    (valorar asyncio, thread)
+    4. Guardar datos en POSTGRESQL                                      (valorar asyncio, thread)
 
 
 def on_message(client, userdata, message):
