@@ -12,11 +12,11 @@ print(mqtt_env('MQTT_KEEPALIVE'))
 print(mqtt_env('MQTT_QOS'))
 
 
-Trabajo a implementar:
-    1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
-    2. Escritura en de log datos recibidos "data/YEAR/MONTH.log"        (valorar asyncio, thread)
-    3. Borrado de log del año anterior "data/YEAR-1"                    (valorar asyncio, thread)
-    4. Guardar datos en POSTGRESQL                                      (valorar asyncio, thread)
+Work to be implemented:
+    1. Secure/stable/reconnections/industrial/simple connections for MQTT   (consider asyncio, thread)
+    2. Write received data to the log file "data/YEAR/MONTH.log"            (consider asyncio, thread)
+    3. Delete the log from the previos year "data/YEAR-1"                   (consider asyncio, thread)
+    4. Save data to POSTGRESQL                                              (consider asyncio, thread)
 """
 
 # 1. Conexion segura/estable/reconexion/industrial/simple para mqttt  (valorar asyncio, thread)
