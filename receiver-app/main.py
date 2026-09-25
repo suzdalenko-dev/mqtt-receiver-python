@@ -25,7 +25,8 @@ Work to be implemented:
     1. Secure/stable/reconnections/industrial/simple connections for MQTT   (consider asyncio, thread)
     2. Write received data to the log file "data/YEAR/MONTH.log"            (consider asyncio, thread)
     3. Delete the log from the previos year "data/YEAR-1"                   (consider asyncio, thread)
-    4. Save data to POSTGRESQL                                              (consider asyncio, thread)
+    4. Create singlenton persisten/higthPerfomance DB POSTGRE connection
+    5. Save data to POSTGRESQL                                              (consider asyncio, thread)
         Create data base column ID, date_utc, date_local, topic, value
 """
 
