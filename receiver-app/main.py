@@ -54,6 +54,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if result != mqtt.MQTT_ERR_SUCCESS:
         print(f"Error al suscribirse {result}")
 
+
 def main():
     start_log_writer()
     start_db_inserter()

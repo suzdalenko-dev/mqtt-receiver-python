@@ -1,8 +1,8 @@
-import queue, json, threading
+import queue, json, threading, time
 from sfunctions.postgre_conn import postgres_connection
 
 DB_QUEUE      = queue.Queue(maxsize=11111)
-
+ERROR_COUNT   = 0
 
 def insert_date_to_db(m):
     """
@@ -41,6 +41,9 @@ def put_message_to_db_queue(date_utc, date_local, topic, content):
 
 def db_writer():
     global DB_QUEUE
+    global ERROR_COUNT
+    ERROR_COUNT = 0
+
     while True:
         m = DB_QUEUE.get()
         try:
@@ -50,6 +53,10 @@ def db_writer():
                     break
                 except Exception as e:
                     print(f"Error in insert_date_to_db function {e}")
+                    ERROR_COUNT += 1
+                    time.sleep(1)
+                    if ERROR_COUNT > 11:
+                        DB_QUEUE.task_done()
         except Exception as e:
             print(f"Error insert data to DB {e}")
         finally:
