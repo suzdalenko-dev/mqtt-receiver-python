@@ -1,4 +1,4 @@
-import queue, json, threading, time
+import queue, json, threading, time, os
 from sfunctions.postgre_conn import postgres_connection
 
 DB_QUEUE      = queue.Queue(maxsize=11111)
@@ -64,7 +64,18 @@ def db_writer():
             DB_QUEUE.task_done()
              
      
-
 def start_db_inserter():
-    thread = threading.Thread(target=db_writer, name="postgres-db-writer", daemon=True,)
+    thread = threading.Thread(target=critical_db_writer, name="postgres-db-writer", daemon=True,)
     thread.start()
+    return thread
+
+
+def critical_db_writer():
+    try:
+        db_writer()
+    except BaseException as e:
+        print(
+            f"CRITICAL: postgres-db-writer died: {e}",
+            flush=True,
+        )
+        os._exit(1)
