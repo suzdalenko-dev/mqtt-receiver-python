@@ -56,7 +56,7 @@ def db_writer():
                     ERROR_COUNT += 1
                     time.sleep(1)
                     if ERROR_COUNT > 11:
-                        DB_QUEUE.task_done()
+                        break
         except Exception as e:
             print(f"Error insert data to DB {e}")
         finally:
