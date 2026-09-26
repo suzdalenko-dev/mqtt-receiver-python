@@ -1,10 +1,25 @@
 import queue, json, threading
+from sfunctions.postgre_conn import postgres_connection
 
 DB_QUEUE      = queue.Queue(maxsize=11111)
 
 
 def insert_date_to_db(m):
-    pass
+    """
+    Insert one MQTT message into PostgreSQL.
+    """
+
+    sql = """
+        INSERT INTO public.mqtt_record_lines (date_utc, date_local, topic, content)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (date_utc)
+        DO NOTHING
+    """
+
+    with postgres_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(sql, (m["date_utc"], m["date_local"], m["topic"], m["content"],))
+
 
 
 
@@ -39,8 +54,5 @@ def db_writer():
      
 
 def start_db_inserter():
-    thread = threading.Thread(
-    target=db_writer,
-    name="postgres-db-writer",
-    daemon=True,
-)
+    thread = threading.Thread(target=db_writer, name="postgres-db-writer", daemon=True,)
+    thread.start()
