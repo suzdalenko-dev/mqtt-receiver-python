@@ -30,9 +30,8 @@ def put_message_to_db_queue(date_utc, date_local, topic, content):
     try:
         content = json.loads(content)
     except:
-            content = content
-    
-    message = {'date_utc':date_utc, 'date_local':date_local, 'topic':topic, 'content':content}
+        content = content
+    message = {'date_utc':date_utc, 'date_local':date_local, 'topic':topic, 'content':str(content)}
     try:
         DB_QUEUE.put_nowait(message)
     except Exception as e:
