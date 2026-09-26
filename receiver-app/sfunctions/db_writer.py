@@ -64,11 +64,6 @@ def db_writer():
             DB_QUEUE.task_done()
              
      
-def start_db_inserter():
-    thread = threading.Thread(target=critical_db_writer, name="postgres-db-writer", daemon=True,)
-    thread.start()
-    return thread
-
 
 def critical_db_writer():
     try:
@@ -79,3 +74,10 @@ def critical_db_writer():
             flush=True,
         )
         os._exit(1)
+
+
+
+def start_db_inserter():
+    thread = threading.Thread(target=critical_db_writer, name="postgres-db-writer", daemon=True,)
+    thread.start()
+    return thread

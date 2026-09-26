@@ -1,5 +1,5 @@
 from pathlib import Path
-import queue, threading, json, shutil
+import queue, threading, json, shutil, os
 
 DATA_DIRECTORY = Path(__file__).resolve().parent.parent.parent / "data"
 LOG_QUEUE      = queue.Queue(maxsize=11111)
@@ -53,7 +53,18 @@ def log_writer():
             LOG_QUEUE.task_done()
 
 
+def critical_log_writer():
+    try:
+        log_writer()
+    except BaseException as e:
+        print(
+            f"CRITICAL: postgres-db-writer died: {e}",
+            flush=True,
+        )
+        os._exit(1)
+
+
 def start_log_writer() -> threading.Thread:
-    tread = threading.Thread(target=log_writer, daemon=True,)
+    tread = threading.Thread(target=critical_log_writer, daemon=True,)
     tread.start()
     return tread
