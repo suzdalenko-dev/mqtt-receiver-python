@@ -42,9 +42,14 @@ def put_message_to_db_queue(date_utc, date_local, topic, content):
 def db_writer():
     global DB_QUEUE
     while True:
+        m = DB_QUEUE.get()
         try:
-            m = DB_QUEUE.get()
-            insert_date_to_db(m)
+            while True:
+                try:
+                    insert_date_to_db(m)
+                    break
+                except Exception as e:
+                    print(f"Error in insert_date_to_db function {e}")
         except Exception as e:
             print(f"Error insert data to DB {e}")
         finally:
