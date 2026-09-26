@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from sfunctions.func import mqtt_env
 from sfunctions.file_writer_log import start_log_writer, put_message_to_log
 from sfunctions.postgre_conn import get_postgres_pool, postgres_connection, close_postgres_pool
+from sfunctions.db_writer import put_message_to_db_queue, start_db_inserter
 
 
 """
@@ -29,7 +30,7 @@ Work to be implemented:
     3. Delete the log from the previos year "data/YEAR-1"                   (consider asyncio, thread)
     4. Create singlenton persisten/higthPerfomance DB POSTGRE connection
         Create data base column id, date_utc, date_local, topic, value
-    5. Save data to POSTGRESQL                                              (consider asyncio, thread)
+   c)
 """
 
 # 1. Secure/stable/reconnections/industrial/simple connections for MQTT
@@ -40,7 +41,7 @@ def on_message(client, userdata, message):
     content    = message.payload.decode("utf-8", errors="replace",)
 
     put_message_to_log(date_utc, date_local, topic, content)
-
+    put_message_to_db_queue(date_utc, date_local, topic, content)
    
     
 def on_connect(client, userdata, flags, reason_code, properties):
@@ -55,6 +56,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 def main():
     start_log_writer()
+    start_db_inserter()
 
     cliente = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, client_id=mqtt_env('MQTT_CLIENT_ID'), clean_session=False, protocol=mqtt.MQTTv311,)
     cliente.username_pw_set(username=mqtt_env("MQTT_USER"), password=mqtt_env("MQTT_PASSWORD"))
